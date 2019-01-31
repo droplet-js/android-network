@@ -1,0 +1,14 @@
+apply plugin: 'java-library'
+
+group = GROUP_ID
+version = VERSION_NAME
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api "com.squareup.okhttp3:okhttp:${okhttpVersion}"
+    api "org.json:json:${jsonVersion}"
+}
+
+sourceCompatibility = sourceCompatibilityVersion
+targetCompatibility = targetCompatibilityVersion

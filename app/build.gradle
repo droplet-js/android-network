@@ -1,0 +1,38 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
+
+    compileOptions {
+        sourceCompatibility sourceCompatibilityVersion
+        targetCompatibility targetCompatibilityVersion
+    }
+
+    defaultConfig {
+        applicationId "io.github.v7lin.network"
+        minSdkVersion 21
+        targetSdkVersion androidTargetSdkVersion
+        versionCode VERSION_CODE
+        versionName "${VERSION_NAME}"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':okhttp3-android')
+
+    testImplementation "junit:junit:${junitVersion}"
+    androidTestImplementation "com.android.support.test:runner:${runnerVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${espressoVersion}"
+}
