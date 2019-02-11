@@ -1,1 +1,1 @@
-include ':app', ':okhttp3', ':okhttp3-android'
+include ':app', ':okhttp3', ':okhttp3-android', ':json'

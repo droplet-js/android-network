@@ -42,6 +42,14 @@ if (project.getPlugins().hasPlugin('com.android.library')) {
     }
 }
 
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
 artifacts {
     archives javadocJar
     archives sourcesJar

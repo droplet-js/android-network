@@ -19,6 +19,7 @@ import okhttp3.ResponseBody;
 import okhttp3.analytics.impl.PlatformAnalyticsFactory;
 import okio.Buffer;
 import okio.BufferedSource;
+import okio.GzipSource;
 
 /**
  * 不要和 HttpLoggingInterceptor 共用
@@ -47,7 +48,7 @@ public final class AnalyticsInterceptor implements Interceptor {
             return chain.proceed(request);
         }
 
-        Analytics analytics = factory.analytics();
+        Analytics analytics = factory.analytics(request.method(), request.url().toString());
 
         boolean logBody = level == Level.BODY;
         boolean logHeaders = logBody || level == Level.HEADERS;
@@ -56,9 +57,9 @@ public final class AnalyticsInterceptor implements Interceptor {
         boolean hasRequestBody = requestBody != null;
 
         if (!logHeaders && hasRequestBody) {
-            analytics.start(request.method(), request.url().toString(), requestBody.contentLength() + "-byte body");
+            analytics.start(requestBody.contentLength() + "-byte body");
         } else {
-            analytics.start(request.method(), request.url().toString(), null);
+            analytics.start(null);
         }
 
         Connection connection = chain.connection();
@@ -90,9 +91,9 @@ public final class AnalyticsInterceptor implements Interceptor {
             analytics.requestHeaders(requestHeaders);
 
             if (!logBody || !hasRequestBody) {
-                analytics.requestOmitted(request.method(), null);
+                analytics.requestOmitted(null);
             } else if (bodyEncoded(request.headers())) {
-                analytics.requestOmitted(request.method(), "encoded body omitted");
+                analytics.requestOmitted("encoded body omitted");
             } else {
                 Buffer buffer = new Buffer();
                 requestBody.writeTo(buffer);
@@ -105,9 +106,9 @@ public final class AnalyticsInterceptor implements Interceptor {
 
                 if (isPlaintext(contentType, buffer)) {
                     analytics.requestPlaintextBody(buffer.readString(charset));
-                    analytics.requestOmitted(request.method(), "plaintext " + requestBody.contentLength() + "-byte body");
+                    analytics.requestOmitted("plaintext " + requestBody.contentLength() + "-byte body");
                 } else {
-                    analytics.requestOmitted(request.method(), "binary " + requestBody.contentLength() + "-byte body");
+                    analytics.requestOmitted("binary " + requestBody.contentLength() + "-byte body");
                 }
             }
         }
@@ -118,7 +119,7 @@ public final class AnalyticsInterceptor implements Interceptor {
             response = chain.proceed(request);
             analytics.response();
         } catch (Exception e) {
-            analytics.error(request.url().toString(), e);
+            analytics.error(e);
             analytics.end();
             throw e;
         }
@@ -127,7 +128,7 @@ public final class AnalyticsInterceptor implements Interceptor {
         ResponseBody responseBody = response.body();
         final long contentLength = responseBody.contentLength();
         String message = contentLength != -1 ? contentLength + "-byte body" : "unknown-length body";
-        analytics.status(response.code(), response.message(), response.request().url().toString(), tookMs, message);
+        analytics.status(response.code(), response.message(), contentLength, tookMs, message);
 
         IdentityHashMap<String, String> responseHeaders = new IdentityHashMap<>();
         if (logHeaders) {
@@ -138,13 +139,22 @@ public final class AnalyticsInterceptor implements Interceptor {
             analytics.responseHeaders(responseHeaders);
 
             if (!logBody || !okhttp3.internal.http.HttpHeaders.hasBody(response)) {
-                analytics.responseOmitted(response.request().method(), null);
+                analytics.responseOmitted(null);
             } else if (bodyEncoded(response.headers())) {
-                analytics.responseOmitted(response.request().method(), "encoded body omitted");
+                analytics.responseOmitted("encoded body omitted");
             } else {
                 BufferedSource source = responseBody.source();
                 source.request(Long.MAX_VALUE); // Buffer the entire body.
                 Buffer buffer = source.buffer();
+
+                Long gzippedLength = null;
+                if ("gzip".equalsIgnoreCase(headers.get(HttpHeaders.CONTENT_ENCODING))) {
+                    gzippedLength = buffer.size();
+                    try (GzipSource gzippedResponseBody = new GzipSource(buffer.clone())) {
+                        buffer = new Buffer();
+                        buffer.writeAll(gzippedResponseBody);
+                    }
+                }
 
                 Charset charset = UTF8;
                 MediaType contentType = responseBody.contentType();
@@ -153,17 +163,20 @@ public final class AnalyticsInterceptor implements Interceptor {
                 }
 
                 if (!isPlaintext(contentType, buffer)) {
-                    analytics.responseOmitted(response.request().method(), "binary " + buffer.size() + "-byte body omitted");
+                    analytics.responseOmitted("binary " + buffer.size() + "-byte body omitted");
                 } else {
                     if (contentLength != 0) {
                         analytics.responsePlaintextBody(buffer.clone().readString(charset));
                     }
 
-                    analytics.responseOmitted(response.request().method(), buffer.size() + "-byte body");
+                    if (gzippedLength != null) {
+                        analytics.responseOmitted(buffer.size() + "-byte, " + gzippedLength + "-gzipped-byte body");
+                    } else {
+                        analytics.responseOmitted(buffer.size() + "-byte body");
+                    }
                 }
             }
         }
-        analytics.finish(contentLength);
         analytics.end();
 
         return response;
@@ -205,24 +218,32 @@ public final class AnalyticsInterceptor implements Interceptor {
     }
 
     public interface AnalyticsFactory {
-        public Analytics analytics();
+        public Analytics analytics(String method, String url);
 
         public static AnalyticsFactory LOGCAT = new PlatformAnalyticsFactory();
     }
 
-    public interface Analytics {
-        public void start(String method, String url, String message);
-        public void connection(String protocol);
-        public void requestHeaders(IdentityHashMap<String, String> requestHeaders);
-        public void requestPlaintextBody(String plaintext);
-        public void requestOmitted(String method, String message);
-        public void response();
-        public void error(String url, Exception e);
-        public void status(int statusCode, String reasonPhrase, String url, long tookMs, String message);
-        public void responseHeaders(IdentityHashMap<String, String> responseHeaders);
-        public void responsePlaintextBody(String plaintext);
-        public void responseOmitted(String method, String message);
-        public void finish(long contentLength);
-        public void end();
+    public static abstract class Analytics {
+
+        protected final String method;
+        protected final String url;
+
+        public Analytics(String method, String url) {
+            this.method = method;
+            this.url = url;
+        }
+
+        public abstract void start(String message);
+        public abstract void connection(String protocol);
+        public abstract void requestHeaders(IdentityHashMap<String, String> requestHeaders);
+        public abstract void requestPlaintextBody(String plaintext);
+        public abstract void requestOmitted(String message);
+        public abstract void response();
+        public abstract void error(Exception e);
+        public abstract void status(int statusCode, String reasonPhrase, long contentLength, long tookMs, String message);
+        public abstract void responseHeaders(IdentityHashMap<String, String> responseHeaders);
+        public abstract void responsePlaintextBody(String plaintext);
+        public abstract void responseOmitted(String message);
+        public abstract void end();
     }
 }

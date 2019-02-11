@@ -1,10 +1,9 @@
 package okhttp3.dns.impl;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.net.InetAddress;
 
+import json.JSONArray;
+import json.JSONObject;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

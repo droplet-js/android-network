@@ -7,10 +7,14 @@ import okhttp3.analytics.AnalyticsInterceptor;
 import okhttp3.internal.platform.Platform;
 import okhttp3.util.TextUtils;
 
-final class PlatformAnalytics implements AnalyticsInterceptor.Analytics {
+final class PlatformAnalytics extends AnalyticsInterceptor.Analytics {
+
+    public PlatformAnalytics(String method, String url) {
+        super(method, url);
+    }
 
     @Override
-    public void start(String method, String url, String message) {
+    public void start(String message) {
         Platform.get().log(Platform.INFO, "--> " + method + " " + url + (!TextUtils.isEmpty(message) ? " (" + message + ")" : ""), null);
     }
 
@@ -32,7 +36,7 @@ final class PlatformAnalytics implements AnalyticsInterceptor.Analytics {
     }
 
     @Override
-    public void requestOmitted(String method, String message) {
+    public void requestOmitted(String message) {
         Platform.get().log(Platform.INFO, "--> END " + method + (!TextUtils.isEmpty(message) ? " (" + message + ")" : ""), null);
     }
 
@@ -42,12 +46,12 @@ final class PlatformAnalytics implements AnalyticsInterceptor.Analytics {
     }
 
     @Override
-    public void error(String url, Exception e) {
+    public void error(Exception e) {
         Platform.get().log(Platform.INFO, "<-- HTTP FAILED: " + url + " " + e, null);
     }
 
     @Override
-    public void status(int statusCode, String reasonPhrase, String url, long tookMs, String message) {
+    public void status(int statusCode, String reasonPhrase, long contentLength, long tookMs, String message) {
         Platform.get().log(Platform.INFO, "<-- " + statusCode + " " + reasonPhrase + " " + url + " (" + tookMs + "ms, " + message + ")", null);
     }
 
@@ -64,13 +68,8 @@ final class PlatformAnalytics implements AnalyticsInterceptor.Analytics {
     }
 
     @Override
-    public void responseOmitted(String method, String message) {
+    public void responseOmitted(String message) {
         Platform.get().log(Platform.INFO, "<-- END " + method + (!TextUtils.isEmpty(message) ? " (" + message + ")" : ""), null);
-    }
-
-    @Override
-    public void finish(long contentLength) {
-
     }
 
     @Override

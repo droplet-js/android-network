@@ -7,8 +7,6 @@ import android.webkit.CookieSyncManager;
 
 @SuppressWarnings("deprecation")
 public final class CookieUtils {
-    
-    private static final String TAG = "CookieUtils";
 
     public static final String SEPARATOR_SEMICOLON = "; ";
     public static final String SEPARATOR_EQUAL_SIGN = "=";

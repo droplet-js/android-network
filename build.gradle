@@ -58,7 +58,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.3.1'
 
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'// https://github.com/dcendents/android-maven-gradle-plugin#note-on-release
         // publish to JFrog
@@ -115,9 +115,7 @@ subprojects {
 
         // ---
 
-        okhttpVersion = '3.12.1'
-
-        jsonVersion = '20180813'
+        okhttpVersion = '3.13.1'
 
         // ---
 

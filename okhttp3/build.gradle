@@ -1,15 +1,37 @@
 apply plugin: 'java-library'
 
-group = GROUP_ID
-version = VERSION_NAME
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     api "com.squareup.okhttp3:okhttp:${okhttpVersion}"
-    api "org.json:json:${jsonVersion}"
 
-//    provided files("${sdk.dir}/platforms/android-${androidCompileSdkVersion}/android.jar")
+    if (PUBLISH_TO_JFROG || PUBLISH_TO_JCENTER) {
+        implementation "${GROUP_ID}:json:${VERSION_NAME}"
+    } else {
+        implementation project(':json')
+    }
+
+    def sdkDir = resolveProperty(project.rootProject.file('local.properties'), 'sdk.dir', System.getenv('ANDROID_HOME'))
+    // provided -> compileOnly
+    compileOnly files("${sdkDir}/platforms/android-${androidCompileSdkVersion}/android.jar")
+}
+
+Properties readPropertiesIfExist(File propertiesFile) {
+    Properties result = new Properties()
+    if (propertiesFile.exists()) {
+        propertiesFile.withReader('UTF-8') { reader -> result.load(reader) }
+    }
+    return result
+}
+
+String resolveProperty(File propertiesFile, String name, String defaultValue) {
+    String result
+    Properties properties = readPropertiesIfExist(propertiesFile)
+    result = properties.getProperty(name)
+    if (result == null) {
+        result = defaultValue
+    }
+    return result
 }
 
 sourceCompatibility = sourceCompatibilityVersion
