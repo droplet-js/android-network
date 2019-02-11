@@ -8,8 +8,11 @@
 
 ### okhttp3
 
-````
+1. [issues#4597](https://github.com/square/okhttp/issues/4597)
+2. [java8-support](https://developer.android.com/studio/write/java8-support)
 
+````
+jdk >= JavaVersion.VERSION_1_8
 ````
 
 ### snapshot
@@ -50,13 +53,37 @@ allprojects {
 
 java
 ````
-implementation "io.github.v7lin:okhttp3:${latestVersion}"
+...
+dependencies {
+    ...
+    implementation "io.github.v7lin:okhttp3:${latestVersion}"
+    ...
+}
+...
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+...
 ````
 
 android
 ````
-implementation "io.github.v7lin:okhttp3:${latestVersion}"
-implementation "io.github.v7lin:okhttp3-android:${latestVersion}"
+...
+android {
+    ...
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    ...
+}
+...
+dependencies {
+    ...
+//    implementation "io.github.v7lin:okhttp3:${latestVersion}"
+    implementation "io.github.v7lin:okhttp3-android:${latestVersion}"
+    ...
+}
+...
 ````
 
 ### example
