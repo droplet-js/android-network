@@ -112,7 +112,7 @@ public final class UDPResolver extends DnsCache.Resolver {
     /**
      * 摘自 okhttp-dnsoverhttps
      */
-    private static class DnsRecordCodec {
+    private static final class DnsRecordCodec {
         private static final byte SERVFAIL = 2;
         private static final byte NXDOMAIN = 3;
         private static final int TYPE_A = 0x0001;

@@ -29,18 +29,15 @@ public final class AnalyticsInterceptor implements Interceptor {
 
     private final AnalyticsFactory factory;
 
-    private Level level = Level.NONE;
+    private final Level level;
 
     public AnalyticsInterceptor() {
-        this(AnalyticsFactory.LOGCAT);
+        this(AnalyticsFactory.LOGCAT, Level.BASIC);
     }
 
-    public AnalyticsInterceptor(AnalyticsFactory factory) {
+    public AnalyticsInterceptor(AnalyticsFactory factory, Level level) {
         this.factory = factory != null ? factory : AnalyticsFactory.LOGCAT;
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
+        this.level = level != null ? level : Level.BASIC;
     }
 
     @Override

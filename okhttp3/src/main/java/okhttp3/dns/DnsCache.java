@@ -121,7 +121,7 @@ public final class DnsCache {
         public abstract Type getType();
     }
 
-    private static class IP {
+    private static final class IP {
 
         private InetAddress ip;
         private long ttl;
@@ -141,7 +141,7 @@ public final class DnsCache {
         }
     }
 
-    public static class Entry {
+    public static final class Entry {
 
         private String host;
         private final List<IP> ips;

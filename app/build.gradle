@@ -16,7 +16,7 @@ android {
         versionCode VERSION_CODE
         versionName "${VERSION_NAME}"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -30,9 +30,13 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation project(':okhttp3-android')
+    if (PUBLISH_TO_JFROG || PUBLISH_TO_JCENTER) {
+        implementation "${GROUP_ID}:okhttp3-android:${VERSION_NAME}"
+    } else {
+        implementation project(':okhttp3-android')
+    }
 
     testImplementation "junit:junit:${junitVersion}"
-    androidTestImplementation "com.android.support.test:runner:${runnerVersion}"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:${espressoVersion}"
+    androidTestImplementation "androidx.test:runner:${runnerVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${espressoVersion}"
 }

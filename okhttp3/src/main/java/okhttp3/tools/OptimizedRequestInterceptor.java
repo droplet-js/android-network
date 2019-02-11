@@ -16,7 +16,7 @@ import okhttp3.util.TextUtils;
 /**
  * 应用层拦截器
  */
-public abstract class OptimizedRequestInterceptor implements Interceptor {
+public class OptimizedRequestInterceptor implements Interceptor {
 
     @Override
     public final Response intercept(Chain chain) throws IOException {

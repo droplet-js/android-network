@@ -8,7 +8,11 @@ dependencies {
 
     api "com.squareup.okhttp3:okhttp:${okhttpVersion}"
     api "org.json:json:${jsonVersion}"
+
+//    provided files("${sdk.dir}/platforms/android-${androidCompileSdkVersion}/android.jar")
 }
 
 sourceCompatibility = sourceCompatibilityVersion
 targetCompatibility = targetCompatibilityVersion
+
+apply from: '../publish.gradle'

@@ -30,6 +30,11 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    api project(':okhttp3')
-//    api "${GROUP_ID}:okhttp3:${VERSION_NAME}"
+    if (PUBLISH_TO_JFROG || PUBLISH_TO_JCENTER) {
+        api "${GROUP_ID}:okhttp3:${VERSION_NAME}"
+    } else {
+        api project(':okhttp3')
+    }
 }
+
+apply from: '../publish.gradle'

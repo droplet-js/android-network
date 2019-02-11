@@ -38,6 +38,7 @@ final class PlatformAnalytics implements AnalyticsInterceptor.Analytics {
 
     @Override
     public void response() {
+
     }
 
     @Override

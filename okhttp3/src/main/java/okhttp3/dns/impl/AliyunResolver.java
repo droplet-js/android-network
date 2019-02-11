@@ -20,14 +20,10 @@ public final class AliyunResolver extends HttpAPIResolver {
     public static final String ACCOUNT_ID_1 = "100000";
     public static final String ACCOUNT_ID_2 = "139450";
 
-    private String accountId;
+    private final String accountId;
 
-    public AliyunResolver() {
-    }
-
-    public AliyunResolver accountId(String accountId) {
+    private AliyunResolver(String accountId) {
         this.accountId = accountId;
-        return this;
     }
 
     @Override
@@ -80,5 +76,22 @@ public final class AliyunResolver extends HttpAPIResolver {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public static final class Builder {
+
+        private String accountId;
+
+        public Builder() {
+        }
+
+        public Builder accountId(String accountId) {
+            this.accountId = accountId;
+            return this;
+        }
+
+        public AliyunResolver build() {
+            return new AliyunResolver(accountId);
+        }
     }
 }

@@ -25,20 +25,12 @@ import okhttp3.util.TextUtils;
 // http://119.29.29.29/d?dn=www.dnspod.cn&ip=1.1.1.1&ttl=1
 public final class DNSPodResolver extends HttpAPIResolver {
 
-    private String appId;
-    private String appKey;
+    private final String appId;
+    private final String appKey;
 
-    public DNSPodResolver() {
-    }
-
-    public DNSPodResolver appId(String appId) {
+    private DNSPodResolver(String appId, String appKey) {
         this.appId = appId;
-        return this;
-    }
-
-    public DNSPodResolver appKey(String appKey) {
         this.appKey = appKey;
-        return this;
     }
 
     @Override
@@ -180,5 +172,30 @@ public final class DNSPodResolver extends HttpAPIResolver {
             }
         }
         return null;
+    }
+
+    public static final class Builder {
+
+        private String appId;
+        private String appKey;
+
+        public Builder() {
+        }
+
+        public Builder free() {
+            this.appId = null;
+            this.appKey = null;
+            return this;
+        }
+
+        public Builder paid(String appId, String appKey) {
+            this.appId = appId;
+            this.appKey = appKey;
+            return this;
+        }
+
+        public DNSPodResolver build() {
+            return new DNSPodResolver(appId, appKey);
+        }
     }
 }
