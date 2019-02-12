@@ -10,13 +10,20 @@ import okhttp3.HttpStatus;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.connectivity.ConnectivityDoctor;
 import okhttp3.internal.http.HttpMethod;
 import okhttp3.util.TextUtils;
 
 /**
  * 应用层拦截器
  */
-public class OptimizedRequestInterceptor implements Interceptor {
+public final class OptimizedRequestInterceptor implements Interceptor {
+
+    private final ConnectivityDoctor connectivityDoctor;
+
+    public OptimizedRequestInterceptor(ConnectivityDoctor connectivityDoctor) {
+        this.connectivityDoctor = connectivityDoctor;
+    }
 
     @Override
     public final Response intercept(Chain chain) throws IOException {
@@ -93,12 +100,12 @@ public class OptimizedRequestInterceptor implements Interceptor {
     }
 
     // Override
-    protected boolean shouldUseCacheIfServerError(Request originalRequest) {
+    private boolean shouldUseCacheIfServerError(Request originalRequest) {
         return true;
     }
 
     // Override check network connectivity
-    protected boolean shouldUseCacheIfThrowError(Request originalRequest, Throwable throwable) {
-        return true;
+    private boolean shouldUseCacheIfThrowError(Request originalRequest, Throwable throwable) {
+        return connectivityDoctor != null && connectivityDoctor.detect();
     }
 }

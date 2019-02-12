@@ -1,4 +1,4 @@
-package okhttp3.analytics;
+package okhttp3.logging;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -16,55 +16,58 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okhttp3.analytics.impl.PlatformAnalyticsFactory;
+import okhttp3.logging.impl.PlatformLoggerFactory;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.GzipSource;
 
 /**
- * 不要和 HttpLoggingInterceptor 共用
+ * 不要和 okhttp-logging-interceptor 中的 HttpLoggingInterceptor 共用
  */
-public final class AnalyticsInterceptor implements Interceptor {
+public final class HttpLoggingInterceptor implements Interceptor {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
-    private final AnalyticsFactory factory;
+    private final LoggerFactory factory;
+    private final LoggerLevel level;
 
-    private final Level level;
-
-    public AnalyticsInterceptor() {
-        this(AnalyticsFactory.LOGCAT, Level.BASIC);
+    public HttpLoggingInterceptor() {
+        this(LoggerFactory.LOGCAT, LoggerLevel.BASIC);
     }
 
-    public AnalyticsInterceptor(AnalyticsFactory factory, Level level) {
-        this.factory = factory != null ? factory : AnalyticsFactory.LOGCAT;
-        this.level = level != null ? level : Level.BASIC;
+    public HttpLoggingInterceptor(LoggerLevel level) {
+        this(LoggerFactory.LOGCAT, level);
+    }
+
+    public HttpLoggingInterceptor(LoggerFactory factory, LoggerLevel level) {
+        this.factory = factory != null ? factory : LoggerFactory.LOGCAT;
+        this.level = level != null ? level : LoggerLevel.BASIC;
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        if (level == Level.NONE) {
+        if (level == LoggerLevel.NONE) {
             return chain.proceed(request);
         }
 
-        Analytics analytics = factory.analytics(request.method(), request.url().toString());
+        Logger logger = factory.logger(request.method(), request.url().toString());
 
-        boolean logBody = level == Level.BODY;
-        boolean logHeaders = logBody || level == Level.HEADERS;
+        boolean logBody = level == LoggerLevel.BODY;
+        boolean logHeaders = logBody || level == LoggerLevel.HEADERS;
 
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
 
         if (!logHeaders && hasRequestBody) {
-            analytics.start(requestBody.contentLength() + "-byte body");
+            logger.start(requestBody.contentLength() + "-byte body");
         } else {
-            analytics.start(null);
+            logger.start(null);
         }
 
         Connection connection = chain.connection();
         Protocol protocol = connection != null ? connection.protocol() : Protocol.HTTP_1_1;
-        analytics.connection(protocol.toString());
+        logger.connection(protocol.toString());
 
         if (logHeaders) {
             IdentityHashMap<String, String> requestHeaders = new IdentityHashMap<>();
@@ -88,12 +91,12 @@ public final class AnalyticsInterceptor implements Interceptor {
                 }
             }
 
-            analytics.requestHeaders(requestHeaders);
+            logger.requestHeaders(requestHeaders);
 
             if (!logBody || !hasRequestBody) {
-                analytics.requestOmitted(null);
+                logger.requestOmitted(null);
             } else if (bodyEncoded(request.headers())) {
-                analytics.requestOmitted("encoded body omitted");
+                logger.requestOmitted("encoded body omitted");
             } else {
                 Buffer buffer = new Buffer();
                 requestBody.writeTo(buffer);
@@ -105,10 +108,10 @@ public final class AnalyticsInterceptor implements Interceptor {
                 }
 
                 if (isPlaintext(contentType, buffer)) {
-                    analytics.requestPlaintextBody(buffer.readString(charset));
-                    analytics.requestOmitted("plaintext " + requestBody.contentLength() + "-byte body");
+                    logger.requestPlaintextBody(buffer.readString(charset));
+                    logger.requestOmitted("plaintext " + requestBody.contentLength() + "-byte body");
                 } else {
-                    analytics.requestOmitted("binary " + requestBody.contentLength() + "-byte body");
+                    logger.requestOmitted("binary " + requestBody.contentLength() + "-byte body");
                 }
             }
         }
@@ -117,10 +120,10 @@ public final class AnalyticsInterceptor implements Interceptor {
         Response response;
         try {
             response = chain.proceed(request);
-            analytics.response();
+            logger.response();
         } catch (Exception e) {
-            analytics.error(e);
-            analytics.end();
+            logger.error(e);
+            logger.end();
             throw e;
         }
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
@@ -128,7 +131,7 @@ public final class AnalyticsInterceptor implements Interceptor {
         ResponseBody responseBody = response.body();
         final long contentLength = responseBody.contentLength();
         String message = contentLength != -1 ? contentLength + "-byte body" : "unknown-length body";
-        analytics.status(response.code(), response.message(), contentLength, tookMs, message);
+        logger.status(response.code(), response.message(), contentLength, tookMs, message);
 
         IdentityHashMap<String, String> responseHeaders = new IdentityHashMap<>();
         if (logHeaders) {
@@ -136,12 +139,12 @@ public final class AnalyticsInterceptor implements Interceptor {
             for (int i = 0, count = headers.size(); i < count; i++) {
                 responseHeaders.put(headers.name(i), headers.value(i));
             }
-            analytics.responseHeaders(responseHeaders);
+            logger.responseHeaders(responseHeaders);
 
             if (!logBody || !okhttp3.internal.http.HttpHeaders.hasBody(response)) {
-                analytics.responseOmitted(null);
+                logger.responseOmitted(null);
             } else if (bodyEncoded(response.headers())) {
-                analytics.responseOmitted("encoded body omitted");
+                logger.responseOmitted("encoded body omitted");
             } else {
                 BufferedSource source = responseBody.source();
                 source.request(Long.MAX_VALUE); // Buffer the entire body.
@@ -163,21 +166,21 @@ public final class AnalyticsInterceptor implements Interceptor {
                 }
 
                 if (!isPlaintext(contentType, buffer)) {
-                    analytics.responseOmitted("binary " + buffer.size() + "-byte body omitted");
+                    logger.responseOmitted("binary " + buffer.size() + "-byte body omitted");
                 } else {
                     if (contentLength != 0) {
-                        analytics.responsePlaintextBody(buffer.clone().readString(charset));
+                        logger.responsePlaintextBody(buffer.clone().readString(charset));
                     }
 
                     if (gzippedLength != null) {
-                        analytics.responseOmitted(buffer.size() + "-byte, " + gzippedLength + "-gzipped-byte body");
+                        logger.responseOmitted(buffer.size() + "-byte, " + gzippedLength + "-gzipped-byte body");
                     } else {
-                        analytics.responseOmitted(buffer.size() + "-byte body");
+                        logger.responseOmitted(buffer.size() + "-byte body");
                     }
                 }
             }
         }
-        analytics.end();
+        logger.end();
 
         return response;
     }
@@ -210,25 +213,25 @@ public final class AnalyticsInterceptor implements Interceptor {
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
     }
 
-    public enum Level {
+    public enum LoggerLevel {
         NONE,
         BASIC,
         HEADERS,
         BODY
     }
 
-    public interface AnalyticsFactory {
-        public Analytics analytics(String method, String url);
+    public interface LoggerFactory {
+        public Logger logger(String method, String url);
 
-        public static AnalyticsFactory LOGCAT = new PlatformAnalyticsFactory();
+        public static LoggerFactory LOGCAT = new PlatformLoggerFactory();
     }
 
-    public static abstract class Analytics {
+    public static abstract class Logger {
 
         protected final String method;
         protected final String url;
 
-        public Analytics(String method, String url) {
+        public Logger(String method, String url) {
             this.method = method;
             this.url = url;
         }

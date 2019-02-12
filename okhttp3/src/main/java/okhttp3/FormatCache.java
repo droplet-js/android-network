@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import javax.annotation.Nullable;
 
 import okhttp3.internal.Util;
 import okhttp3.internal.cache.CacheRequest;
@@ -41,7 +42,7 @@ public final class FormatCache implements Closeable, Flushable {
 
     public static final KeyFormatter DEFAULT_KEY_FORMATTER = new KeyFormatter() {
         @Override
-        public String key(String url) {
+        public String key(HttpUrl url) {
             return ByteString.encodeUtf8(url.toString()).md5().hex();
         }
     };
@@ -84,7 +85,7 @@ public final class FormatCache implements Closeable, Flushable {
     };
 
     public interface KeyFormatter {
-        public String key(String url);
+        public String key(HttpUrl url);
     }
 
     final DiskLruCache cache;
@@ -97,6 +98,9 @@ public final class FormatCache implements Closeable, Flushable {
     private int hitCount;
     private int requestCount;
 
+    /**
+     * Create a cache of at most {@code maxSize} bytes in {@code directory}.
+     */
     public FormatCache(File directory, long maxSize) {
         this(directory, maxSize, FileSystem.SYSTEM, DEFAULT_KEY_FORMATTER);
     }
@@ -115,10 +119,10 @@ public final class FormatCache implements Closeable, Flushable {
     }
 
     private String key(HttpUrl url) {
-        return formatter.key(url.toString());
+        return formatter.key(url);
     }
 
-    Response get(Request request) throws IOException {
+    @Nullable Response get(Request request) {
         String key = key(request.url());
         DiskLruCache.Snapshot snapshot;
         Entry entry;
@@ -149,7 +153,7 @@ public final class FormatCache implements Closeable, Flushable {
         return response;
     }
 
-    CacheRequest put(Response response) throws IOException {
+    @Nullable CacheRequest put(Response response) {
         String requestMethod = response.request().method();
 
         if (HttpMethod.invalidatesCache(response.request().method())) {
@@ -205,7 +209,7 @@ public final class FormatCache implements Closeable, Flushable {
         }
     }
 
-    private void abortQuietly(DiskLruCache.Editor editor) {
+    private void abortQuietly(@Nullable DiskLruCache.Editor editor) {
         // Give up because the cache cannot be written.
         try {
             if (editor != null) {
@@ -215,18 +219,46 @@ public final class FormatCache implements Closeable, Flushable {
         }
     }
 
+    /**
+     * Initialize the cache. This will include reading the journal files from the storage and building
+     * up the necessary in-memory cache information.
+     *
+     * <p>The initialization time may vary depending on the journal file size and the current actual
+     * cache size. The application needs to be aware of calling this function during the
+     * initialization phase and preferably in a background worker thread.
+     *
+     * <p>Note that if the application chooses to not call this method to initialize the cache. By
+     * default, the okhttp will perform lazy initialization upon the first usage of the cache.
+     */
     public void initialize() throws IOException {
         cache.initialize();
     }
 
+    /**
+     * Closes the cache and deletes all of its stored values. This will delete all files in the cache
+     * directory including files that weren't created by the cache.
+     */
     public void delete() throws IOException {
         cache.delete();
     }
 
+    /**
+     * Deletes all values stored in the cache. In-flight writes to the cache will complete normally,
+     * but the corresponding responses will not be stored.
+     */
     public void evictAll() throws IOException {
         cache.evictAll();
     }
 
+    /**
+     * Returns an iterator over the URLs in this cache. This iterator doesn't throw {@code
+     * ConcurrentModificationException}, but if new responses are added while iterating, their URLs
+     * will not be returned. If existing responses are evicted during iteration, they will be absent
+     * (unless they were already returned).
+     *
+     * <p>The iterator supports {@linkplain Iterator#remove}. Removing a URL from the iterator evicts
+     * the corresponding response from the cache. Use this to evict selected responses.
+     */
     public Iterator<String> urls() throws IOException {
         return new Iterator<String>() {
             final Iterator<DiskLruCache.Snapshot> delegate = cache.snapshots();
@@ -285,6 +317,7 @@ public final class FormatCache implements Closeable, Flushable {
         return cache.size();
     }
 
+    /** Max size of the cache (in bytes). */
     public long maxSize() {
         return cache.getMaxSize();
     }
@@ -686,5 +719,11 @@ public final class FormatCache implements Closeable, Flushable {
         public BufferedSource source() {
             return bodySource;
         }
+    }
+
+    // ---
+
+    public static void setFormatCache(OkHttpClient.Builder clientBuilder, FormatCache formatCache) {
+        clientBuilder.setInternalCache(formatCache.internalCache());
     }
 }

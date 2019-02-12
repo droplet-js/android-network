@@ -2,13 +2,18 @@ package okhttp3.cookie;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
-public interface CookiePersistor {
-    List<Cookie> load(HttpUrl index);
+public abstract class CookiePersistor {
+    public static final CookiePersistor MEMORY = new MemoryCookiePersistor();
 
-    boolean update(HttpUrl index, List<Cookie> persistentCookies);
+    @Nullable
+    public abstract List<Cookie> load(HttpUrl index);
 
-    boolean clear();
+    public abstract boolean update(HttpUrl index, @Nullable List<Cookie> cookies);
+
+    public abstract boolean clear();
 }

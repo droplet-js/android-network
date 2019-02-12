@@ -105,7 +105,7 @@ subprojects {
 
         // ---
 
-        androidMinSdkVersion = 14
+        androidMinSdkVersion = 21
         androidTargetSdkVersion = 21
 
         // ---
@@ -116,6 +116,7 @@ subprojects {
         // ---
 
         okhttpVersion = '3.13.1'
+        jsr305Version = '2.0.1'
 
         // ---
 

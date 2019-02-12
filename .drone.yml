@@ -24,19 +24,19 @@ steps:
 #  - ./gradlew :okhttp3:clean :okhttp3:install :okhttp3:artifactoryPublish
 #  - ./gradlew :okhttp3-android:clean :okhttp3-android:install :okhttp3-android:artifactoryPublish
 
-- name: release
-  image: runmymind/docker-android-sdk
-  environment:
-    PUBLISH_TO_JCENTER: true
-    BINTRAY_USER:
-      from_secret: BINTRAY_USER
-    BINTRAY_API_KEY:
-      from_secret: BINTRAY_API_KEY
-    VERSION_NAME: 0.0.1
-  commands:
-  - ./gradlew :json:clean :json:install :json:bintrayUpload
-  - ./gradlew :okhttp3:clean :okhttp3:install :okhttp3:bintrayUpload
-  - ./gradlew :okhttp3-android:clean :okhttp3-android:install :okhttp3-android:bintrayUpload
-  when:
-    event:
-    - tag
+#- name: release
+#  image: runmymind/docker-android-sdk
+#  environment:
+#    PUBLISH_TO_JCENTER: true
+#    BINTRAY_USER:
+#      from_secret: BINTRAY_USER
+#    BINTRAY_API_KEY:
+#      from_secret: BINTRAY_API_KEY
+#    VERSION_NAME: 0.0.1
+#  commands:
+#  - ./gradlew :json:clean :json:install :json:bintrayUpload
+#  - ./gradlew :okhttp3:clean :okhttp3:install :okhttp3:bintrayUpload
+#  - ./gradlew :okhttp3-android:clean :okhttp3-android:install :okhttp3-android:bintrayUpload
+#  when:
+#    event:
+#    - tag

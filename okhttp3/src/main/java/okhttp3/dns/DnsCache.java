@@ -2,44 +2,29 @@ package okhttp3.dns;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class DnsCache {
 
-    private final Map<String, Entry> dnsMapByHost;
     private final List<HttpResolver> httpDnsProviders;
     private final List<UDPResolver> udpDnsProviders;
     private final List<LocalResolver> localDnsProviders;
 
-    public DnsCache() {
-        super();
-        this.dnsMapByHost = new ConcurrentHashMap<>();
+    private final Map<String, Entry> dnsMapByHost = new ConcurrentHashMap<>();
 
-        this.httpDnsProviders = new ArrayList<>();
-        this.udpDnsProviders = new ArrayList<>();
-        this.localDnsProviders = new ArrayList<>();
+    private DnsCache(List<HttpResolver> httpDnsProviders, List<UDPResolver> udpDnsProviders, List<LocalResolver> localDnsProviders) {
+        super();
+        this.httpDnsProviders = httpDnsProviders;
+        this.udpDnsProviders = udpDnsProviders;
+        this.localDnsProviders = localDnsProviders;
 
         registerBuiltInResolver();
     }
 
     private void registerBuiltInResolver() {
-    }
-
-    public DnsCache registerHttpResolver(HttpResolver httpResolver) {
-        httpDnsProviders.add(httpResolver);
-        return this;
-    }
-
-    public DnsCache registerUDPResolver(UDPResolver udpResolver) {
-        udpDnsProviders.add(udpResolver);
-        return this;
-    }
-
-    public DnsCache registerLocalResolver(LocalResolver localResolver) {
-        localDnsProviders.add(localResolver);
-        return this;
     }
 
     public final Entry resolveRemoteHost(String host) {
@@ -210,12 +195,31 @@ public final class DnsCache {
         }
     }
 
-    private static final class DnsCacheHolder {
-        private static final DnsCache INSTANCE = new DnsCache();
-    }
+    public static final class Builder {
+        private final List<HttpResolver> httpDnsProviders = new ArrayList<>();
+        private final List<UDPResolver> udpDnsProviders = new ArrayList<>();
+        private final List<LocalResolver> localDnsProviders = new ArrayList<>();
 
-    public static DnsCache get() {
-        return DnsCacheHolder.INSTANCE;
-    }
+        public Builder() {
+        }
 
+        public Builder registerHttpResolver(HttpResolver httpResolver) {
+            httpDnsProviders.add(httpResolver);
+            return this;
+        }
+
+        public Builder registerUDPResolver(UDPResolver udpResolver) {
+            udpDnsProviders.add(udpResolver);
+            return this;
+        }
+
+        public Builder registerLocalResolver(LocalResolver localResolver) {
+            localDnsProviders.add(localResolver);
+            return this;
+        }
+
+        public DnsCache build() {
+            return new DnsCache(Collections.unmodifiableList(httpDnsProviders), Collections.unmodifiableList(udpDnsProviders), Collections.unmodifiableList(localDnsProviders));
+        }
+    }
 }

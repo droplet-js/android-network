@@ -11,6 +11,7 @@ import okhttp3.Cache;
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.cookie.PersistentCookieJar;
 import okhttp3.util.TextUtils;
 
 public abstract class HttpAPIResolver extends HttpResolver {
@@ -21,8 +22,8 @@ public abstract class HttpAPIResolver extends HttpResolver {
         this.clientBuilder = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS);
-//                .cookieJar(new WebkitCookieJar(context, false));
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .cookieJar(PersistentCookieJar.memory());
     }
 
     public HttpAPIResolver interceptor(Interceptor interceptor) {

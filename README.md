@@ -8,11 +8,13 @@
 
 ### okhttp3
 
-1. [issues#4597](https://github.com/square/okhttp/issues/4597)
-2. [java8-support](https://developer.android.com/studio/write/java8-support)
+1. OkHttp适用于Android 5.0+（API级别21+）和Java 8+。
+2. [issues#4597](https://github.com/square/okhttp/issues/4597)
+3. [java8-support](https://developer.android.com/studio/write/java8-support)
 
 ````
 jdk >= JavaVersion.VERSION_1_8
+android.defaultConfig.minSdkVersion >= 21
 ````
 
 ### snapshot

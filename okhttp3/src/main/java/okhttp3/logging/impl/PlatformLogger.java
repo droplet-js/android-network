@@ -1,15 +1,15 @@
-package okhttp3.analytics.impl;
+package okhttp3.logging.impl;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import okhttp3.analytics.AnalyticsInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.internal.platform.Platform;
 import okhttp3.util.TextUtils;
 
-final class PlatformAnalytics extends AnalyticsInterceptor.Analytics {
+final class PlatformLogger extends HttpLoggingInterceptor.Logger {
 
-    public PlatformAnalytics(String method, String url) {
+    public PlatformLogger(String method, String url) {
         super(method, url);
     }
 

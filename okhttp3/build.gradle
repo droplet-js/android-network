@@ -3,6 +3,8 @@ apply plugin: 'java-library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    compileOnly "com.google.code.findbugs:jsr305:${jsr305Version}"
+
     api "com.squareup.okhttp3:okhttp:${okhttpVersion}"
 
     if (PUBLISH_TO_JFROG || PUBLISH_TO_JCENTER) {
@@ -14,6 +16,9 @@ dependencies {
     def sdkDir = resolveProperty(project.rootProject.file('local.properties'), 'sdk.dir', System.getenv('ANDROID_HOME'))
     // provided -> compileOnly
     compileOnly files("${sdkDir}/platforms/android-${androidCompileSdkVersion}/android.jar")
+
+    testImplementation "junit:junit:${junitVersion}"
+    testImplementation "com.squareup.okhttp3:okhttp-testing-support:${okhttpVersion}"
 }
 
 Properties readPropertiesIfExist(File propertiesFile) {
