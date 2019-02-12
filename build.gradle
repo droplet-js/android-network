@@ -37,10 +37,10 @@ ext {
     VERSION_CODE = buildVersionCode()
     VERSION_NAME = buildVersionName()//'x.y.z'/'x.y.z-SNAPSHOT'
 
-    SITE_URL = 'https://github.com/v7lin/android-speech'
-    GIT_URL = 'https://github.com/v7lin/android-speech.git'
+    SITE_URL = 'https://github.com/v7lin/android-network'
+    GIT_URL = 'https://github.com/v7lin/android-network.git'
     ISSUE_SYSTEM = 'GitHub'
-    ISSUE_TRACKER_URL = 'https://github.com/v7lin/android-speech/issues'
+    ISSUE_TRACKER_URL = 'https://github.com/v7lin/android-network/issues'
 
     LICENSE_APACHE_NAME = 'The Apache Software License, Version 2.0'
     LICENSE_APACHE_URL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
