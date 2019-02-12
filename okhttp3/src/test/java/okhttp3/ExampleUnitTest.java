@@ -43,8 +43,8 @@ public class ExampleUnitTest {
                         return true;
                     }
                 }))
-                .addInterceptor(new OptimizedResponseInterceptor())
-                .addInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.LoggerLevel.BODY))
+                .addNetworkInterceptor(new OptimizedResponseInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.LoggerLevel.BODY))
                 .addNetworkInterceptor(new ProgressRequestInterceptor(new HttpProgressListener() {
                     @Override
                     public void onProgressChanged(String url, String method, long progressBytes, long totalBytes, boolean isDone) {

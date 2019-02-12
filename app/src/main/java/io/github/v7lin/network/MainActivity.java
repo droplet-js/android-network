@@ -17,12 +17,8 @@ import okhttp3.Response;
 import okhttp3.android.WebkitCookieJar;
 import okhttp3.android.util.NetworkUtils;
 import okhttp3.connectivity.android.AndroidConnectivityDoctor;
-import okhttp3.dns.DnsCache;
-import okhttp3.dns.MixedDns;
-import okhttp3.dns.UDPResolver;
 import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okhttp3.proxy.android.AndroidProxyDoctor;
 import okhttp3.tools.HttpProgressListener;
 import okhttp3.tools.OptimizedRequestInterceptor;
 import okhttp3.tools.OptimizedResponseInterceptor;
@@ -43,17 +39,17 @@ public class MainActivity extends Activity {
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .cookieJar(new WebkitCookieJar(this, true))
-                .dns(new MixedDns(
-                        new DnsCache.Builder()
-                                .registerUDPResolver(new UDPResolver(UDPResolver.UDP_ALIYUN_DNS_SERVER_IP_1))
-                                .registerUDPResolver(new UDPResolver(UDPResolver.UDP_ALIYUN_DNS_SERVER_IP_2))
-                                .build(),
-                        new AndroidProxyDoctor(this)
-                ))
+//                .dns(new MixedDns(
+//                        new DnsCache.Builder()
+////                                .registerUDPResolver(new UDPResolver(UDPResolver.UDP_ALIYUN_DNS_SERVER_IP_1))
+////                                .registerUDPResolver(new UDPResolver(UDPResolver.UDP_ALIYUN_DNS_SERVER_IP_2))
+//                                .build(),
+//                        new AndroidProxyDoctor(this)
+//                ))
                 .addInterceptor(new UserAgentInterceptor(NetworkUtils.getUserAgent(this)))
                 .addInterceptor(new OptimizedRequestInterceptor(new AndroidConnectivityDoctor(this)))
-                .addInterceptor(new OptimizedResponseInterceptor())
-                .addInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.LoggerLevel.BODY))
+                .addNetworkInterceptor(new OptimizedResponseInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.LoggerLevel.BODY))
                 .addNetworkInterceptor(new ProgressRequestInterceptor(new HttpProgressListener() {
                     @Override
                     public void onProgressChanged(String url, String method, long progressBytes, long totalBytes, boolean isDone) {

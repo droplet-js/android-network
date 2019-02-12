@@ -3,6 +3,7 @@ package okhttp3.tools;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import javax.annotation.Nonnull;
 
@@ -54,7 +55,7 @@ public final class OptimizedRequestInterceptor implements Interceptor {
                     response = chain.proceed(originalRequest);
                 }
             } catch (ConnectException | SocketTimeoutException e) {
-                if (shouldUseCacheIfServerError(originalRequest)) {
+                if (shouldUseCacheIfWeakConnect(originalRequest)) {
                     Request forceCacheRequest = originalRequest.newBuilder()
                             .removeHeader(HttpHeaders.CACHE_CONTROL)
                             .removeHeader(HttpHeaders.PRAGMA)
@@ -76,7 +77,13 @@ public final class OptimizedRequestInterceptor implements Interceptor {
                             .removeHeader(HttpHeaders.IF_MODIFIED_SINCE)
                             .cacheControl(CacheControl.FORCE_CACHE)
                             .build();
-                    return chain.proceed(forceCacheRequest);
+                    response = chain.proceed(forceCacheRequest);
+                    if (response.code() == HttpStatus.GATEWAY_TIMEOUT.code()) {
+                        if (e instanceof UnknownHostException) {
+                            throw e;
+                        }
+                    }
+                    return response;
                 } else {
                     throw e;
                 }
@@ -101,13 +108,15 @@ public final class OptimizedRequestInterceptor implements Interceptor {
         return chain.proceed(originalRequest);
     }
 
-    // Override
+    private boolean shouldUseCacheIfWeakConnect(Request originalRequest) {
+        return true;
+    }
+
     private boolean shouldUseCacheIfServerError(Request originalRequest) {
         return true;
     }
 
-    // Override check network connectivity
     private boolean shouldUseCacheIfThrowError(Request originalRequest, Throwable throwable) {
-        return connectivityDoctor.detect();
+        return !connectivityDoctor.detect();
     }
 }
