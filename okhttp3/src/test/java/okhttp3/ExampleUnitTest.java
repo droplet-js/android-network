@@ -6,9 +6,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.connectivity.ConnectivityDoctor;
 import okhttp3.cookie.PersistentCookieJar;
@@ -22,9 +22,7 @@ import okhttp3.tools.ProgressResponseInterceptor;
 import okhttp3.tools.UserAgentInterceptor;
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * 单元测试结果见 {project}/build/reports/tests/test/index.html
  */
 @RunWith(JUnit4.class)
 public class ExampleUnitTest {
@@ -34,6 +32,9 @@ public class ExampleUnitTest {
     @Before
     public void setUp() throws Exception {
         clientBuilder = new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
                 .cookieJar(PersistentCookieJar.memory())
                 .addInterceptor(new UserAgentInterceptor("xxx"))
                 .addInterceptor(new OptimizedRequestInterceptor(new ConnectivityDoctor() {
@@ -56,7 +57,7 @@ public class ExampleUnitTest {
                         Platform.get().log(Platform.INFO, String.format("progress response - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
                     }
                 }));
-        FormatCache.setFormatCache(clientBuilder, new FormatCache(new File("/xxx/cache"), 512 * 1024 * 1024, FormatCache.DEFAULT_KEY_FORMATTER));
+//        FormatCache.setFormatCache(clientBuilder, new FormatCache(new File("/xxx/cache"), 512 * 1024 * 1024, FormatCache.DEFAULT_KEY_FORMATTER));
     }
 
     @Test
@@ -110,6 +111,12 @@ public class ExampleUnitTest {
                 });
         countDownLatch.await();
     }
+
+//    @Test
+//    public void unitFail() {
+////        Assert.assertEquals("单元测试失败打断命令", "单元测试失败");
+//        throw new RuntimeException("单元测试失败打断命令");
+//    }
 
     @After
     public void tearDown() throws Exception {

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
+import javax.annotation.Nonnull;
+
 import okhttp3.CacheControl;
 import okhttp3.HttpHeaders;
 import okhttp3.HttpStatus;
@@ -21,7 +23,7 @@ public final class OptimizedRequestInterceptor implements Interceptor {
 
     private final ConnectivityDoctor connectivityDoctor;
 
-    public OptimizedRequestInterceptor(ConnectivityDoctor connectivityDoctor) {
+    public OptimizedRequestInterceptor(@Nonnull ConnectivityDoctor connectivityDoctor) {
         this.connectivityDoctor = connectivityDoctor;
     }
 
@@ -106,6 +108,6 @@ public final class OptimizedRequestInterceptor implements Interceptor {
 
     // Override check network connectivity
     private boolean shouldUseCacheIfThrowError(Request originalRequest, Throwable throwable) {
-        return connectivityDoctor != null && connectivityDoctor.detect();
+        return connectivityDoctor.detect();
     }
 }
