@@ -17,7 +17,8 @@ def bintrayApiKey() {
 }
 
 def buildVersionCode() {
-    return new Date().format("yyyyMMddHH", TimeZone.getTimeZone("GMT+8")).toInteger()
+    String versionCode = System.getenv('VERSION_CODE')
+    return versionCode != null && !versionCode.isEmpty() ? Integer.valueOf(versionCode) : 1
 }
 
 def buildVersionName() {

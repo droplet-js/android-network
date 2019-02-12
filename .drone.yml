@@ -24,6 +24,7 @@ steps:
       from_secret: BINTRAY_USER
     BINTRAY_API_KEY:
       from_secret: BINTRAY_API_KEY
+    VERSION_CODE: ${DRONE_BUILD_NUMBER}
     VERSION_NAME: 0.0.1-SNAPSHOT
   commands:
   - ./gradlew :json:clean :json:install :json:artifactoryPublish
@@ -41,6 +42,7 @@ steps:
       from_secret: BINTRAY_USER
     BINTRAY_API_KEY:
       from_secret: BINTRAY_API_KEY
+    VERSION_CODE: ${DRONE_BUILD_NUMBER}
     VERSION_NAME: 0.0.1
   commands:
   - ./gradlew :json:clean :json:install :json:bintrayUpload
