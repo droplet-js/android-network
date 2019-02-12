@@ -47,13 +47,13 @@ public class ExampleUnitTest {
                 .addNetworkInterceptor(new ProgressRequestInterceptor(new HttpProgressListener() {
                     @Override
                     public void onProgressChanged(String url, String method, long progressBytes, long totalBytes, boolean isDone) {
-                        Platform.get().log(Platform.INFO, String.format("progress request - %1$s %2$s %3$d/%4$d done:%5b", method, url, progressBytes, totalBytes, isDone), null);
+                        Platform.get().log(Platform.INFO, String.format("progress request - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
                     }
                 }))
                 .addNetworkInterceptor(new ProgressResponseInterceptor(new HttpProgressListener() {
                     @Override
                     public void onProgressChanged(String url, String method, long progressBytes, long totalBytes, boolean isDone) {
-                        Platform.get().log(Platform.INFO, String.format("progress response - %1$s %2$s %3$d/%4$d done:%5b", method, url, progressBytes, totalBytes, isDone), null);
+                        Platform.get().log(Platform.INFO, String.format("progress response - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
                     }
                 }));
         FormatCache.setFormatCache(clientBuilder, new FormatCache(new File("/xxx/cache"), 512 * 1024 * 1024, FormatCache.DEFAULT_KEY_FORMATTER));
