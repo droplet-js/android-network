@@ -14,7 +14,9 @@ import okhttp3.connectivity.ConnectivityDoctor;
 import okhttp3.cookie.PersistentCookieJar;
 import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.tools.GZipFixResponseInterceptor;
 import okhttp3.tools.HttpProgressListener;
+import okhttp3.tools.NotModifiedFixedInterceptor;
 import okhttp3.tools.OptimizedRequestInterceptor;
 import okhttp3.tools.OptimizedResponseInterceptor;
 import okhttp3.tools.ProgressRequestInterceptor;
@@ -37,12 +39,14 @@ public class ExampleUnitTest {
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .cookieJar(PersistentCookieJar.memory())
                 .addInterceptor(new UserAgentInterceptor("xxx"))
+                .addInterceptor(new GZipFixResponseInterceptor())
                 .addInterceptor(new OptimizedRequestInterceptor(new ConnectivityDoctor() {
                     @Override
                     public boolean detect() {
                         return true;
                     }
                 }))
+                .addInterceptor(new NotModifiedFixedInterceptor())
                 .addNetworkInterceptor(new OptimizedResponseInterceptor())
                 .addNetworkInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.LoggerLevel.BODY))
                 .addNetworkInterceptor(new ProgressRequestInterceptor(new HttpProgressListener() {

@@ -23,7 +23,9 @@ import okhttp3.dns.UDPResolver;
 import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okhttp3.proxy.android.AndroidProxyDoctor;
+import okhttp3.tools.GZipFixResponseInterceptor;
 import okhttp3.tools.HttpProgressListener;
+import okhttp3.tools.NotModifiedFixedInterceptor;
 import okhttp3.tools.OptimizedRequestInterceptor;
 import okhttp3.tools.OptimizedResponseInterceptor;
 import okhttp3.tools.ProgressRequestInterceptor;
@@ -51,7 +53,9 @@ public class MainActivity extends Activity {
                         new AndroidProxyDoctor(this)
                 ))
                 .addInterceptor(new UserAgentInterceptor(NetworkUtils.getUserAgent(this)))
+                .addInterceptor(new GZipFixResponseInterceptor())
                 .addInterceptor(new OptimizedRequestInterceptor(new AndroidConnectivityDoctor(this)))
+                .addInterceptor(new NotModifiedFixedInterceptor())
                 .addNetworkInterceptor(new OptimizedResponseInterceptor())
                 .addNetworkInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.LoggerLevel.BODY))
                 .addNetworkInterceptor(new ProgressRequestInterceptor(new HttpProgressListener() {
