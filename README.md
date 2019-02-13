@@ -1,11 +1,5 @@
 # android-network
 
-### json
-
-````
-源码摘自 'org.json:json:20180813'
-````
-
 ### okhttp3
 
 1. OkHttp适用于Android 5.0+（API级别21+）和Java 8+。
@@ -35,7 +29,7 @@ allprojects {
 }
 ````
 
-### release(feature)
+### release
 
 ````
 ext {

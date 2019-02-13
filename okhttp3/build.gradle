@@ -5,13 +5,8 @@ dependencies {
 
     compileOnly "com.google.code.findbugs:jsr305:${jsr305Version}"
 
+    implementation "io.github.v7lin:json:${jsonVersion}"
     api "com.squareup.okhttp3:okhttp:${okhttpVersion}"
-
-    if (PUBLISH_TO_JFROG || PUBLISH_TO_JCENTER) {
-        implementation "${GROUP_ID}:json:${VERSION_NAME}"
-    } else {
-        implementation project(':json')
-    }
 
     def sdkDir = resolveProperty(project.rootProject.file('local.properties'), 'sdk.dir', System.getenv('ANDROID_HOME'))
     // provided -> compileOnly

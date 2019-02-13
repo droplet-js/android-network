@@ -119,6 +119,8 @@ subprojects {
         okhttpVersion = '3.13.1'
         jsr305Version = '2.0.1'
 
+        jsonVersion = '0.0.1'
+
         // ---
 
         junitVersion = '4.12'
