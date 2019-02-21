@@ -89,10 +89,6 @@ allprojects {
         // JCenter 第一个版本审核通过之前需要
         maven {
             url  "https://dl.bintray.com/v7lin/maven"
-            credentials {
-                username BINTRAY_USER
-                password BINTRAY_API_KEY
-            }
         }
     }
 }
