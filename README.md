@@ -1,5 +1,9 @@
 # okhttp3 && okhttp3-android
 
+[![Build Status](https://cloud.drone.io/api/badges/v7lin/android-network/status.svg)](https://cloud.drone.io/v7lin/android-network)
+[ ![Download](https://api.bintray.com/packages/v7lin/maven/okhttp3/images/download.svg) ](https://bintray.com/v7lin/maven/okhttp3/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/v7lin/maven/okhttp3-android/images/download.svg) ](https://bintray.com/v7lin/maven/okhttp3-android/_latestVersion)
+
 ### okhttp3
 
 1. OkHttp适用于Android 5.0+（API级别21+）和Java 8+。
