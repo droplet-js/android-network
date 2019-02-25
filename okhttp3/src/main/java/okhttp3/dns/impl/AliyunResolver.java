@@ -40,12 +40,12 @@ public final class AliyunResolver extends HttpAPIResolver {
         HttpUrl httpUrl = new HttpUrl.Builder()
                 .scheme("http")
                 .host("203.107.1.1")
-                .addPathSegment(accountId)// account_id 阿里云控制台注册
+                .addPathSegment(accountId) // account_id 阿里云控制台注册
                 .addPathSegment("d")
                 .addQueryParameter("host", host)
 //                .addQueryParameter("ip", generateMchIP())
                 .build();
-        OkHttpClient client = clientBuilder.build();//new OkHttpClient();
+        OkHttpClient client = clientBuilder.build(); // new OkHttpClient();
         Request request = new Request.Builder()
                 .url(httpUrl)
                 .get()
@@ -65,7 +65,7 @@ public final class AliyunResolver extends HttpAPIResolver {
                 JSONArray ips = !jsonObject.isNull("ips") ? jsonObject.optJSONArray("ips") : null;
                 if (ips != null && ips.length() > 0) {
                     DnsCache.Entry entry = new DnsCache.Entry(host);
-                    for (int i = 0; i < ips.length(); i ++) {
+                    for (int i = 0; i < ips.length(); i++) {
                         String ip = ips.optString(i);
                         entry.addIP(InetAddress.getByName(ip), ttl);
                     }

@@ -9,13 +9,13 @@
 
     <Button
         android:id="@+id/http_get"
-        android:text="HTTP GET"
+        android:text="@string/http_get"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/http_get_json"
-        android:text="HTTP GET JSON"
+        android:text="@string/http_get_json"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -44,7 +44,7 @@ public final class ProgressRequestInterceptor implements Interceptor {
         private final String method;
         private final HttpProgressListener listener;
 
-        public CallbackAdapter(String url, String method, HttpProgressListener listener) {
+        CallbackAdapter(String url, String method, HttpProgressListener listener) {
             this.url = url;
             this.method = method;
             this.listener = listener;
@@ -70,7 +70,7 @@ public final class ProgressRequestInterceptor implements Interceptor {
         private final RequestBody wrapped;
         private final Callback callback;
 
-        public ProgressRequestBody(RequestBody wrapped, Callback callback) {
+        ProgressRequestBody(RequestBody wrapped, Callback callback) {
             super();
             this.wrapped = wrapped;
             this.callback = callback;
@@ -83,7 +83,7 @@ public final class ProgressRequestInterceptor implements Interceptor {
 
         @Override
         public long contentLength() throws IOException {
-            return wrapped.contentLength();//super.contentLength();
+            return wrapped.contentLength(); // super.contentLength();
         }
 
         @Override
@@ -101,7 +101,7 @@ public final class ProgressRequestInterceptor implements Interceptor {
 
         private long progressBytes = 0L;
 
-        public ProgressForwardingSink(Sink delegate, long totalBytes, Callback callback) {
+        ProgressForwardingSink(Sink delegate, long totalBytes, Callback callback) {
             super(delegate);
             this.totalBytes = totalBytes;
             this.callback = callback;
@@ -127,7 +127,7 @@ public final class ProgressRequestInterceptor implements Interceptor {
     }
 
     interface Callback {
-        public void onWrite(long progressBytes, long totalBytes);
-        public void onClose(long progressBytes, long totalBytes);
+        void onWrite(long progressBytes, long totalBytes);
+        void onClose(long progressBytes, long totalBytes);
     }
 }

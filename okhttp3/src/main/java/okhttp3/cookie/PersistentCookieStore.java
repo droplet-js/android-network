@@ -12,7 +12,7 @@ final class PersistentCookieStore {
 
     private final CookiePersistor persistor;
 
-    public PersistentCookieStore(CookiePersistor persistor) {
+    PersistentCookieStore(CookiePersistor persistor) {
         this.persistor = persistor;
     }
 
@@ -29,7 +29,9 @@ final class PersistentCookieStore {
                 for (Cookie effectiveCookie : effectiveCookies) {
                     if (effectiveCookie.equals(cookie)) {
                         shouldRemoveCookies.add(effectiveCookie);
-                    } else if (TextUtils.equals(effectiveCookie.name(), cookie.name()) && TextUtils.equals(effectiveCookie.domain(), cookie.domain()) && TextUtils.equals(effectiveCookie.path(), cookie.path())) {
+                    } else if (TextUtils.equals(effectiveCookie.name(), cookie.name())
+                            && TextUtils.equals(effectiveCookie.domain(), cookie.domain())
+                            && TextUtils.equals(effectiveCookie.path(), cookie.path())) {
                         shouldRemoveCookies.add(effectiveCookie);
                     }
                 }

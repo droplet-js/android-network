@@ -30,7 +30,7 @@ public final class OptimizedResponseInterceptor implements Interceptor {
     }
 
     @Override
-    public final Response intercept(Chain chain) throws IOException {
+    public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
         Response originalResponse = chain.proceed(originalRequest);
         if (!HttpMethod.invalidatesCache(originalRequest.method())) {

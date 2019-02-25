@@ -9,6 +9,12 @@ android {
         targetCompatibility targetCompatibilityVersion
     }
 
+    lintOptions {
+        textOutput 'stdout'
+        textReport true
+        lintConfig rootProject.file('lint.xml')
+    }
+
     defaultConfig {
         applicationId "io.github.v7lin.network"
         minSdkVersion 21

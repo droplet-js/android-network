@@ -2,6 +2,14 @@ kind: pipeline
 name: default
 
 steps:
+- name: check
+  image: runmymind/docker-android-sdk
+  volumes:
+  - name: gradle
+    path: /root/.gradle
+  commands:
+  - ./gradlew clean check
+
 - name: build
   image: runmymind/docker-android-sdk
   volumes:

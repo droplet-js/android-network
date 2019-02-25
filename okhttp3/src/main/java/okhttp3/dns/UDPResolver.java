@@ -45,9 +45,9 @@ public final class UDPResolver extends DnsCache.Resolver {
     // Open DNS
     public static final String UDP_OPEN_DNS_SERVER_IP = "208.67.220.220";
 
-    private final static int DNS_SERVER_PORT = 53;
+    private static final int DNS_SERVER_PORT = 53;
 
-    private final static int TIME_OUT = 2000;
+    private static final int TIME_OUT = 2000;
 
     private static final int BUF_SIZE = 1024;
 
@@ -106,7 +106,7 @@ public final class UDPResolver extends DnsCache.Resolver {
 
     @Override
     public DnsCache.Type getType() {
-        return DnsCache.Type.UDP;//super.getType();
+        return DnsCache.Type.UDP; // super.getType();
     }
 
     /**

@@ -125,6 +125,24 @@ subprojects {
         runnerVersion = '1.1.0-alpha4'
         espressoVersion = '3.1.0-alpha4'
     }
+
+    if (project.getPlugins().hasPlugin('com.android.library')) {
+        plugins.apply('checkstyle')
+
+        task('checkstyle', type: Checkstyle) {
+            configFile rootProject.file('config/checkstyle/checkstyle.xml')
+            source 'src/main/java'
+            ignoreFailures false
+            showViolations true
+            include '**/*.java'
+
+            classpath = files()
+        }
+
+        afterEvaluate {
+            tasks.findByName('check').dependsOn('checkstyle')
+        }
+    }
 }
 
 task clean(type: Delete) {

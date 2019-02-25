@@ -41,7 +41,7 @@ public final class ProgressResponseInterceptor implements Interceptor {
         private final String method;
         private final HttpProgressListener listener;
 
-        public CallbackAdapter(String url, String method, HttpProgressListener listener) {
+        CallbackAdapter(String url, String method, HttpProgressListener listener) {
             this.url = url;
             this.method = method;
             this.listener = listener;
@@ -69,7 +69,7 @@ public final class ProgressResponseInterceptor implements Interceptor {
 
         private BufferedSource bufferedSource;
 
-        public ProgressResponseBody(ResponseBody wrapped, Callback callback) {
+        ProgressResponseBody(ResponseBody wrapped, Callback callback) {
             super();
             this.wrapped = wrapped;
             this.callback = callback;
@@ -101,7 +101,7 @@ public final class ProgressResponseInterceptor implements Interceptor {
 
         private long progressBytes = 0L;
 
-        public ProgressForwardingSource(Source delegate, long totalBytes, Callback callback) {
+        ProgressForwardingSource(Source delegate, long totalBytes, Callback callback) {
             super(delegate);
             this.totalBytes = totalBytes;
             this.callback = callback;
@@ -128,7 +128,7 @@ public final class ProgressResponseInterceptor implements Interceptor {
     }
 
     interface Callback {
-        public void onRead(long progressBytes, long totalBytes);
-        public void onClose(long progressBytes, long totalBytes);
+        void onRead(long progressBytes, long totalBytes);
+        void onClose(long progressBytes, long totalBytes);
     }
 }

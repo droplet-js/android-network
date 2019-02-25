@@ -12,28 +12,28 @@ import okhttp3.HttpUrl;
 
 final class MemoryCookiePersistor extends CookiePersistor {
 
-    private final Map<HttpUrl, List<Cookie>> _urlIndex = new HashMap<>();
+    private final Map<HttpUrl, List<Cookie>> urlIndex = new HashMap<>();
 
     @Nullable
     @Override
     public List<Cookie> load(HttpUrl index) {
-        List<Cookie> cookies = _urlIndex.get(index);
+        List<Cookie> cookies = urlIndex.get(index);
         return cookies != null ? Collections.unmodifiableList(cookies) : null;
     }
 
     @Override
     public boolean update(HttpUrl index, @Nullable List<Cookie> cookies) {
         if (cookies != null) {
-            _urlIndex.put(index, cookies);
+            urlIndex.put(index, cookies);
         } else {
-            _urlIndex.remove(index);
+            urlIndex.remove(index);
         }
         return true;
     }
 
     @Override
     public boolean clear() {
-        _urlIndex.clear();
+        urlIndex.clear();
         return true;
     }
 }

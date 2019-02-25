@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">android-network</string>
+    <string name="http_get">HTTP GET</string>
+    <string name="http_get_json">HTTP GET JSON</string>
 </resources>

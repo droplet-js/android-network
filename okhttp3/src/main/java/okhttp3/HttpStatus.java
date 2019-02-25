@@ -26,7 +26,7 @@ public enum HttpStatus {
     NOT_MODIFIED(HttpURLConnection.HTTP_NOT_MODIFIED, "Not Modified", "未修改"),
     USE_PROXY(HttpURLConnection.HTTP_USE_PROXY, "Use Proxy", "使用代理"),
     @Deprecated
-    SWITCH_PROXY(306, "Switch Proxy", "开关代理"),// 在最新版的规范中，306状态码已经不再被使用。
+    SWITCH_PROXY(306, "Switch Proxy", "开关代理"), // 在最新版的规范中，306状态码已经不再被使用。
     TEMPORARY_REDIRECT(307, "Temporary Redirect", "临时重定向"),
     PERMANENT_REDIRECT(308, "Permanent Redirect", "永久重定向"),
     // 请求错误

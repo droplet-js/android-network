@@ -58,7 +58,7 @@ public final class HttpUtils {
         return new Date(response.receivedResponseAtMillis());
     }
 
-    public static String oauth(String token_type, String access_token) {
-        return String.format(Locale.getDefault(), "%1$s %2$s", token_type, access_token);
+    public static String oauth(String tokenType, String accessToken) {
+        return String.format(Locale.getDefault(), "%1$s %2$s", tokenType, accessToken);
     }
 }

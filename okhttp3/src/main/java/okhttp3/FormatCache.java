@@ -85,7 +85,7 @@ public final class FormatCache implements Closeable, Flushable {
     };
 
     public interface KeyFormatter {
-        public String key(HttpUrl url);
+        String key(HttpUrl url);
     }
 
     final DiskLruCache cache;

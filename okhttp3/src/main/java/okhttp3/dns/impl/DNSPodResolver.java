@@ -55,7 +55,7 @@ public final class DNSPodResolver extends HttpAPIResolver {
 //                .addQueryParameter("ip", generateMchIP())
                 .addQueryParameter("ttl", "1")
                 .build();
-        OkHttpClient client = clientBuilder.build();//new OkHttpClient();
+        OkHttpClient client = clientBuilder.build(); // new OkHttpClient();
         Request request = new Request.Builder()
                 .url(httpUrl)
                 .get()
@@ -69,7 +69,8 @@ public final class DNSPodResolver extends HttpAPIResolver {
         return null;
     }
 
-    private DnsCache.Entry getDnsPaid(String host, String appId, String appKey) throws IOException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    private DnsCache.Entry getDnsPaid(String host, String appId, String appKey)
+            throws IOException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         HttpUrl httpUrl = new HttpUrl.Builder()
                 .scheme("http")
                 .host("119.29.29.29")
@@ -79,7 +80,7 @@ public final class DNSPodResolver extends HttpAPIResolver {
 //                .addQueryParameter("ip", generateMchIP())
                 .addQueryParameter("ttl", "1")
                 .build();
-        OkHttpClient client = clientBuilder.build();//new OkHttpClient();
+        OkHttpClient client = clientBuilder.build(); // new OkHttpClient();
         Request request = new Request.Builder()
                 .url(httpUrl)
                 .get()
@@ -93,7 +94,8 @@ public final class DNSPodResolver extends HttpAPIResolver {
         return null;
     }
 
-    private String encrypt(String host, String appKey) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    private String encrypt(String host, String appKey)
+            throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         // 初始化密钥
         SecretKeySpec keySpec = new SecretKeySpec(appKey.getBytes("utf-8"), "DES");
         // 选择使用 DES 算法，ECB 方式，填充方式为 PKCS5Padding
@@ -105,7 +107,8 @@ public final class DNSPodResolver extends HttpAPIResolver {
         return bytesToHexStr(encryptedStr);
     }
 
-    private String decrypt(String body, String appKey) throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    private String decrypt(String body, String appKey)
+            throws UnsupportedEncodingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         // 初始化密钥
         SecretKeySpec keySpec = new SecretKeySpec(appKey.getBytes("utf-8"), "DES");
         // 选择使用 DES 算法，ECB 方式，填充方式为 PKCS5Padding
@@ -157,7 +160,7 @@ public final class DNSPodResolver extends HttpAPIResolver {
             if (values != null && values.length > 0 && !TextUtils.isEmpty(values[0])) {
                 long ttl = DEFAULT_DNS_TTL;
                 if (values.length >= 2) {
-                    if (!TextUtils.isEmpty(values[1]) &&TextUtils.isDigitsOnly(values[1])) {
+                    if (!TextUtils.isEmpty(values[1]) && TextUtils.isDigitsOnly(values[1])) {
                         ttl = Integer.parseInt(values[1]);
                     }
                 }

@@ -221,12 +221,12 @@ public final class HttpLoggingInterceptor implements Interceptor {
     }
 
     public interface LoggerFactory {
-        public Logger logger(String method, String url);
+        Logger logger(String method, String url);
 
-        public static LoggerFactory LOGCAT = new PlatformLoggerFactory();
+        LoggerFactory LOGCAT = new PlatformLoggerFactory();
     }
 
-    public static abstract class Logger {
+    public abstract static class Logger {
 
         protected final String method;
         protected final String url;

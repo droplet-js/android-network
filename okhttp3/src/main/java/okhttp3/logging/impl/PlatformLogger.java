@@ -9,7 +9,7 @@ import okhttp3.util.TextUtils;
 
 final class PlatformLogger extends HttpLoggingInterceptor.Logger {
 
-    public PlatformLogger(String method, String url) {
+    PlatformLogger(String method, String url) {
         super(method, url);
     }
 

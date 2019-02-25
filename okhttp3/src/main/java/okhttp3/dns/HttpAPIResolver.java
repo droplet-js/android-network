@@ -52,7 +52,7 @@ public abstract class HttpAPIResolver extends HttpResolver {
             Enumeration<NetworkInterface> nifs = NetworkInterface.getNetworkInterfaces();
             // 遍历所用的网络接口
             while (nifs.hasMoreElements()) {
-                NetworkInterface nif = nifs.nextElement();// 得到每一个网络接口绑定的所有ip
+                NetworkInterface nif = nifs.nextElement(); // 得到每一个网络接口绑定的所有ip
                 if (nif != null) {
                     // usbnet 须排除
                     if (nif.getDisplayName().startsWith("eth") // 以太网

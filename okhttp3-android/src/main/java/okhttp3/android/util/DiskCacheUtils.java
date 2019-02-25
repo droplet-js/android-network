@@ -23,12 +23,7 @@ public final class DiskCacheUtils {
 
         try {
             StatFs statFs = new StatFs(dir.getAbsolutePath());
-            long available = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                available = statFs.getBlockCountLong() * statFs.getBlockSizeLong();
-            } else {
-                available = (long) statFs.getBlockCount() * statFs.getBlockSize();
-            }
+            long available = statFs.getBlockCountLong() * statFs.getBlockSizeLong();
             // Target 10% of the total space.
             size = available / 10;
         } catch (IllegalArgumentException ignored) {
@@ -42,7 +37,7 @@ public final class DiskCacheUtils {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         boolean largeHeap = (context.getApplicationInfo().flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
         int memoryClass = am.getMemoryClass();
-        if (largeHeap && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (largeHeap) {
             memoryClass = ActivityManagerHoneycomb.getLargeMemoryClass(am);
         }
         // Target ~10% of the available heap.

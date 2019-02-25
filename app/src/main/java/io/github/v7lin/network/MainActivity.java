@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -34,7 +35,7 @@ import okhttp3.tools.UserAgentInterceptor;
 
 public class MainActivity extends Activity {
 
-    private OkHttpClient.Builder clientBuilder;
+    OkHttpClient.Builder clientBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +62,15 @@ public class MainActivity extends Activity {
                 .addNetworkInterceptor(new ProgressRequestInterceptor(new HttpProgressListener() {
                     @Override
                     public void onProgressChanged(String url, String method, long progressBytes, long totalBytes, boolean isDone) {
-                        Platform.get().log(Platform.INFO, String.format("progress request - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
+                        Platform.get().log(Platform.INFO,
+                                String.format(Locale.getDefault(), "progress request - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
                     }
                 }))
                 .addNetworkInterceptor(new ProgressResponseInterceptor(new HttpProgressListener() {
                     @Override
                     public void onProgressChanged(String url, String method, long progressBytes, long totalBytes, boolean isDone) {
-                        Platform.get().log(Platform.INFO, String.format("progress response - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
+                        Platform.get().log(Platform.INFO,
+                                String.format(Locale.getDefault(), "progress response - %1$s %2$s %3$d/%4$d done:%5$b", method, url, progressBytes, totalBytes, isDone), null);
                     }
                 }));
         FormatCache.setFormatCache(clientBuilder, new FormatCache(getExternalCacheDir(), 512 * 1024 * 1024, FormatCache.DEFAULT_KEY_FORMATTER));
@@ -85,12 +88,14 @@ public class MainActivity extends Activity {
                         .enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                Platform.get().log(Platform.INFO, String.format("error: %1$s", e.toString()), null);
+                                Platform.get().log(Platform.INFO,
+                                        String.format("error: %1$s", e.toString()), null);
                             }
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
-                                Platform.get().log(Platform.INFO, String.format("resp: %1$d - %2$s- %3$s", response.code(), response.message(), response.body().string()), null);
+                                Platform.get().log(Platform.INFO,
+                                        String.format(Locale.getDefault(), "resp: %1$d - %2$s- %3$s", response.code(), response.message(), response.body().string()), null);
                             }
                         });
             }
@@ -109,12 +114,14 @@ public class MainActivity extends Activity {
                         .enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                Platform.get().log(Platform.INFO, String.format("error: %1$s", e.toString()), null);
+                                Platform.get().log(Platform.INFO,
+                                        String.format(Locale.getDefault(), "error: %1$s", e.toString()), null);
                             }
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
-                                Platform.get().log(Platform.INFO, String.format("resp: %1$d - %2$s- %3$s", response.code(), response.message(), response.body().string()), null);
+                                Platform.get().log(Platform.INFO,
+                                        String.format(Locale.getDefault(), "resp: %1$d - %2$s- %3$s", response.code(), response.message(), response.body().string()), null);
                             }
                         });
             }

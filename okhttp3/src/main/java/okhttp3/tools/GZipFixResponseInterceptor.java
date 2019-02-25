@@ -37,7 +37,7 @@ public final class GZipFixResponseInterceptor implements Interceptor {
         private boolean shouldFixGZipResp = false;
         private BufferedSource bufferedSource;
 
-        public GZipFixedResponseBody(ResponseBody wrapped) {
+        GZipFixedResponseBody(ResponseBody wrapped) {
             super();
             this.wrapped = wrapped;
         }

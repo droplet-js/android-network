@@ -27,7 +27,7 @@ public final class DnsCache {
     private void registerBuiltInResolver() {
     }
 
-    public final Entry resolveRemoteHost(String host) {
+    public Entry resolveRemoteHost(String host) {
         Entry entry = get(host);
         if (entry == null || entry.isEmpty()) {
             entry = getHttpServer(host);
@@ -41,7 +41,7 @@ public final class DnsCache {
         return entry != null && !entry.isEmpty() ? entry : null;
     }
 
-    public final Entry resolveLocalHost(String host) {
+    public Entry resolveLocalHost(String host) {
         return getLocalServer(host);
     }
 
@@ -87,7 +87,7 @@ public final class DnsCache {
         dnsMapByHost.put(host, entry);
     }
 
-    public final void clear() {
+    public void clear() {
         dnsMapByHost.clear();
     }
 
@@ -97,7 +97,7 @@ public final class DnsCache {
         UDP
     }
 
-    public static abstract class Resolver {
+    public abstract static class Resolver {
 
         public static final long DEFAULT_DNS_TTL = 60;
 
@@ -111,7 +111,7 @@ public final class DnsCache {
         private InetAddress ip;
         private long ttl;
 
-        public IP(InetAddress ip, long ttl) {
+        IP(InetAddress ip, long ttl) {
             super();
             this.ip = ip;
             this.ttl = ttl;

@@ -36,7 +36,7 @@ public final class GZipRequestInterceptor implements Interceptor {
 
         private RequestBody wrapped;
 
-        public GZipRequestBody(RequestBody wrapped) {
+        GZipRequestBody(RequestBody wrapped) {
             super();
             this.wrapped = wrapped;
         }
