@@ -1,4 +1,4 @@
-# okhttp3 && okhttp3-android
+# android-network
 
 [![Build Status](https://cloud.drone.io/api/badges/v7lin/android-network/status.svg)](https://cloud.drone.io/v7lin/android-network)
 [![GitHub tag](https://img.shields.io/github/tag/v7lin/android-network.svg)](https://github.com/v7lin/android-network/releases)
