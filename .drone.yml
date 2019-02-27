@@ -37,6 +37,8 @@ steps:
   - ./gradlew :okhttp3:clean :okhttp3:install :okhttp3:artifactoryPublish
   - ./gradlew :okhttp3-android:clean :okhttp3-android:install :okhttp3-android:artifactoryPublish
   when:
+    branch:
+    - master
     event:
     - push
 

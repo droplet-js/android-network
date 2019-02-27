@@ -1,8 +1,8 @@
 # okhttp3 && okhttp3-android
 
 [![Build Status](https://cloud.drone.io/api/badges/v7lin/android-network/status.svg)](https://cloud.drone.io/v7lin/android-network)
-[ ![Download](https://api.bintray.com/packages/v7lin/maven/okhttp3/images/download.svg) ](https://bintray.com/v7lin/maven/okhttp3/_latestVersion)
-[ ![Download](https://api.bintray.com/packages/v7lin/maven/okhttp3-android/images/download.svg) ](https://bintray.com/v7lin/maven/okhttp3-android/_latestVersion)
+[![GitHub tag](https://img.shields.io/github/tag/v7lin/android-network.svg)](https://github.com/v7lin/android-network/releases)
+[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 
 ### okhttp3
 
