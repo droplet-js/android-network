@@ -116,7 +116,7 @@ subprojects {
 
         okhttpVersion = '3.13.1'
 
-        jsonVersion = '1.0.0'
+        jsonVersion = '20180813'
 
         // ---
 
