@@ -19,7 +19,7 @@ android.defaultConfig.minSdkVersion >= 21
 
 ````
 ext {
-    latestVersion = '1.0.2-SNAPSHOT'
+    latestVersion = '1.0.3-SNAPSHOT'
 }
 
 allprojects {
