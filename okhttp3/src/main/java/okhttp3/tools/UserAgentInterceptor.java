@@ -6,16 +6,17 @@ import okhttp3.HttpHeaders;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ua.UserAgentDoctor;
 
 /**
  * 应用层拦截器
  */
 public final class UserAgentInterceptor implements Interceptor {
 
-    private final String userAgent;
+    private final UserAgentDoctor userAgentDoctor;
 
-    public UserAgentInterceptor(String userAgent) {
-        this.userAgent = userAgent;
+    public UserAgentInterceptor(UserAgentDoctor userAgentDoctor) {
+        this.userAgentDoctor = userAgentDoctor;
     }
 
     @Override
@@ -25,7 +26,7 @@ public final class UserAgentInterceptor implements Interceptor {
             return chain.proceed(originalRequest);
         }
         Request userAgentRequest = originalRequest.newBuilder()
-                .header(HttpHeaders.USER_AGENT, userAgent)
+                .header(HttpHeaders.USER_AGENT, userAgentDoctor.detect())
                 .build();
         return chain.proceed(userAgentRequest);
     }
