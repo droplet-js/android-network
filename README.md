@@ -19,7 +19,7 @@ android.defaultConfig.minSdkVersion >= 21
 
 ````
 ext {
-    latestVersion = '1.0.1-SNAPSHOT'
+    latestVersion = '1.0.2-SNAPSHOT'
 }
 
 allprojects {
@@ -37,7 +37,7 @@ allprojects {
 
 ````
 ext {
-    latestVersion = '1.0.1'
+    latestVersion = '1.0.2'
 }
 
 allprojects {

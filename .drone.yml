@@ -32,7 +32,7 @@ steps:
     BINTRAY_API_KEY:
       from_secret: BINTRAY_API_KEY
     VERSION_CODE: ${DRONE_BUILD_NUMBER}
-    VERSION_NAME: 1.0.1-SNAPSHOT
+    VERSION_NAME: 1.0.2-SNAPSHOT
   commands:
   - ./gradlew :okhttp3:clean :okhttp3:install :okhttp3:artifactoryPublish
   - ./gradlew :okhttp3-android:clean :okhttp3-android:install :okhttp3-android:artifactoryPublish
@@ -54,7 +54,7 @@ steps:
     BINTRAY_API_KEY:
       from_secret: BINTRAY_API_KEY
     VERSION_CODE: ${DRONE_BUILD_NUMBER}
-    VERSION_NAME: 1.0.1
+    VERSION_NAME: 1.0.2
   commands:
   - ./gradlew :okhttp3:clean :okhttp3:install :okhttp3:bintrayUpload
   - ./gradlew :okhttp3-android:clean :okhttp3-android:install :okhttp3-android:bintrayUpload
