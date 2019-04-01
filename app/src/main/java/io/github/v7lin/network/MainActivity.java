@@ -16,7 +16,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.android.WebkitCookieJar;
-import okhttp3.android.util.NetworkUtils;
 import okhttp3.connectivity.android.AndroidConnectivityDoctor;
 import okhttp3.dns.DnsCache;
 import okhttp3.dns.MixedDns;
@@ -32,6 +31,7 @@ import okhttp3.tools.OptimizedResponseInterceptor;
 import okhttp3.tools.ProgressRequestInterceptor;
 import okhttp3.tools.ProgressResponseInterceptor;
 import okhttp3.tools.UserAgentInterceptor;
+import okhttp3.ua.android.AndroidUserAgentDoctor;
 
 public class MainActivity extends Activity {
 
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
                                 .build(),
                         new AndroidProxyDoctor(this)
                 ))
-                .addInterceptor(new UserAgentInterceptor(NetworkUtils.getUserAgent(this)))
+                .addInterceptor(new UserAgentInterceptor(new AndroidUserAgentDoctor(this)))
                 .addInterceptor(new GZipFixResponseInterceptor())
                 .addInterceptor(new OptimizedRequestInterceptor(new AndroidConnectivityDoctor(this)))
                 .addInterceptor(new NotModifiedFixedInterceptor())
