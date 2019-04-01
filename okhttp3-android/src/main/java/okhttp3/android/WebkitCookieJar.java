@@ -2,6 +2,7 @@ package okhttp3.android;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -12,7 +13,6 @@ import java.util.List;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
-import okhttp3.util.TextUtils;
 
 @SuppressWarnings("deprecation")
 public final class WebkitCookieJar implements CookieJar {
