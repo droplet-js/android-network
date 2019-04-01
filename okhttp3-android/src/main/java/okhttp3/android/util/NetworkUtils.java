@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Process;
-import android.text.TextUtils;
 import android.webkit.WebSettings;
 
 import java.io.UnsupportedEncodingException;
@@ -15,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 import okhttp3.internal.Version;
+import okhttp3.util.TextUtils;
 
 public final class NetworkUtils {
     private NetworkUtils() {

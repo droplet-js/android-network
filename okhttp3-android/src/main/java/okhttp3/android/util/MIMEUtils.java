@@ -3,11 +3,11 @@ package okhttp3.android.util;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import okhttp3.MIME;
 import okhttp3.MediaType;
+import okhttp3.util.TextUtils;
 
 public final class MIMEUtils {
 

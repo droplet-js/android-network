@@ -2,7 +2,6 @@ package okhttp3.ua.android;
 
 import android.content.Context;
 import android.os.Build;
-import android.text.TextUtils;
 import android.webkit.WebSettings;
 
 import java.io.UnsupportedEncodingException;
@@ -11,6 +10,7 @@ import java.util.Locale;
 
 import okhttp3.internal.Version;
 import okhttp3.ua.UserAgentDoctor;
+import okhttp3.util.TextUtils;
 
 public class AndroidUserAgentDoctor implements UserAgentDoctor {
 

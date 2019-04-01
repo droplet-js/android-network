@@ -1,9 +1,10 @@
 package okhttp3.android.util;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+
+import okhttp3.util.TextUtils;
 
 @SuppressWarnings("deprecation")
 public final class CookieUtils {
