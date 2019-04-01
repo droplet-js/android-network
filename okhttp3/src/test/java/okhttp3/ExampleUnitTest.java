@@ -22,6 +22,7 @@ import okhttp3.tools.OptimizedResponseInterceptor;
 import okhttp3.tools.ProgressRequestInterceptor;
 import okhttp3.tools.ProgressResponseInterceptor;
 import okhttp3.tools.UserAgentInterceptor;
+import okhttp3.ua.UserAgentDoctor;
 
 /**
  * 单元测试结果见 {project}/build/reports/tests/test/index.html
@@ -38,7 +39,12 @@ public class ExampleUnitTest {
                 .readTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .cookieJar(PersistentCookieJar.memory())
-                .addInterceptor(new UserAgentInterceptor("xxx"))
+                .addInterceptor(new UserAgentInterceptor(new UserAgentDoctor() {
+                    @Override
+                    public String detect() {
+                        return "xxx";
+                    }
+                }))
                 .addInterceptor(new GZipFixResponseInterceptor())
                 .addInterceptor(new OptimizedRequestInterceptor(new ConnectivityDoctor() {
                     @Override
